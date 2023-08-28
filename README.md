@@ -21,7 +21,7 @@ See the Makefile for all commands useful when working with this repository.
 - ~~Delete order endpoint~~
 - ~~Split order into order + line items~~
 - ~~Add line item endpoint~~
-- Delete line item endpoint
+- ~~Delete line item endpoint~~
 - Orders for date endpoint
 - Check "returns id" tests
 - Invalid JSON tests
