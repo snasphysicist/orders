@@ -53,7 +53,11 @@
   "Removes the table prefix :orders/ from the order keys."
   [o]
   (update-keys o
-    (fn [k] (keyword (clojure.string/replace (str k) #"^:orders/" "")))))
+    (fn [k] (keyword 
+              (clojure.string/replace 
+                (clojure.string/replace (str k) #"^:orders/" "")
+                #"^:line_items/"
+                "")))))
 
 (defn- update-date-key
   "Replaces the :odate key with :date"
@@ -63,7 +67,7 @@
 (defn read-order
   "Read the order with the given id from the database."
   [id]
-  (let [sql "SELECT * FROM orders WHERE id=?;"
+  (let [sql "SELECT * FROM orders WHERE orders.id=?;"
         o (first (jdbc/execute! (db) [sql (Integer. (str id))]))]
     (if (empty? o)
       {:result :error :type errors/not-found :message (str "No order with id " id)}
@@ -97,3 +101,12 @@
       {:result :error
        :type errors/not-found
        :message (str "No line item in order " oid  " with id " id)})))
+
+(defn read-line-items-for-order
+  "Find all line items for the given order."
+  [id]
+  (let [sql "SELECT * FROM line_items WHERE oid=?;"
+        r (jdbc/execute! (db) [sql (Integer. id)])]
+    (map
+      strip-table-prefix 
+      r)))

@@ -48,7 +48,15 @@
   [sid]
   (let [id (string->integer sid)]
     (if (result/ok? id)
-      (repository/read-order (:value id))
+      (let [o (repository/read-order (:value id))]
+        (if (result/ok? o) 
+          (merge 
+           o 
+           {:value 
+            (merge 
+             (:value o) 
+             {:line-items (repository/read-line-items-for-order (:value id))})})
+          o))      
       id)))
 
 (defn delete-order
