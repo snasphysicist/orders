@@ -27,6 +27,13 @@
   (let [res (create-order o)]
     (not-nil (:id (json/read-str (:body res) :key-fn keyword)) res)))
 
+(defn read-order 
+  "Read the order with the given id from the service"
+  [id]
+  (let [r (client/get (str "http://localhost:3000/order/" id) {:throw-exceptions false})]
+    {:status (:status r) 
+     :order (json-read-str (:body r))}))
+
 (defn add-line-item
   "Add a line item to the order with the given id in the service API."
   [li id]

@@ -5,13 +5,6 @@
   (:require [orders.shared-test :as shared])
   (:require [orders.core :as core]))
 
-(defn- read-order 
-  "Read the order with the given id from the service"
-  [id]
-  (let [r (client/get (str "http://localhost:3000/order/" id) {:throw-exceptions false})]
-    {:status (:status r) 
-     :order (shared/json-read-str (:body r))}))
-
 (deftest read-back-order
   (testing "Read back an order"
     (let [s (core/-main)]
@@ -19,7 +12,7 @@
         (is 
           (= {:customer "Scott" :date "2023-08-19"}
              (let [id (shared/create-order-read-id {:customer "Scott" :date "2023-08-19"})]
-               (select-keys (:order (read-order id)) [:customer :date]))))
+               (select-keys (:order (shared/read-order id)) [:customer :date]))))
         (s)))))
 
 (deftest read-back-non-existent-order
@@ -27,7 +20,7 @@
     (let [s (core/-main)]
       (do
         (is 
-          (= 404 (:status (read-order -123))))
+          (= 404 (:status (shared/read-order -123))))
         (s)))))
 
 (deftest read-order-invalid-id
@@ -35,5 +28,5 @@
     (let [s (core/-main)]
       (do
         (is 
-          (= 400 (:status (read-order "foo"))))
+          (= 400 (:status (shared/read-order "foo"))))
         (s)))))
