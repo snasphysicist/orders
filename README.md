@@ -31,6 +31,7 @@ See the Makefile for all commands useful when working with this repository.
 - Proper migrations
 - Dependency injection?
 - Configuration loading?
+- Try/finally equivalent?
 - Linting
 - Logging
 - How to use functions before they are "declared" in the file?
